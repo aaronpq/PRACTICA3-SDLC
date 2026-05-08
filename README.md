@@ -2,6 +2,17 @@
 
 **NovaCorp Platform** is an internal web application for managing companies and their associated comments. It supports three roles (`admin`, `owner`, `user`) with different access levels.
 
+Este proyecto implementa un ciclo de vida de desarrollo seguro (SDLC) para la plataforma NovaCorp.
+
+## Controles de Seguridad (CI/CD)
+Este repositorio integra análisis automáticos en cada 'push':
+- **SCA (Software Composition Analysis):** Ejecutado con `pip-audit` para detectar dependencias vulnerables.
+- **SAST (Static Application Security Testing):** Ejecutado con `Semgrep` para identificar fallos de seguridad en el código fuente.
+
+## Despliegue
+- **URL Pública:** 
+- **Entorno:** Contenedor Docker (Python 3.11-slim)
+
 ---
 
 ## Installation
@@ -29,36 +40,34 @@ The database is automatically initialized on first run.
 
 ## Project Structure
 
+
 ```
+
 .
-├── main.py                 # Entry point
-├── server.py               # Flask app configuration
-├── db/
-│   └── __init__.py         # Database initialization and helpers
-├── routes/
-│   ├── auth.py             # Login/logout
-│   ├── companies.py        # Company views, dashboard, search
-│   ├── companies_admin.py  # Admin company management
-│   ├── users_admin.py      # Admin user management
-│   └── profile.py          # User profiles
-├── templates/
-│   ├── base.html           # Shared layout
-│   ├── dashboard.html      # Main dashboard
-│   ├── auth/               # Login page
-│   ├── companies/          # Company pages
-│   ├── admin/              # Admin panels
-│   ├── profile/            # User profile pages
-│   └── errors/             # 404, 403 pages
-├── static/
-│   └── css/style.css       # Custom styles
-└── requirements.txt
+├── .github/workflows/       # Pipelines de GitHub Actions (Seguridad)
+├── app/                     # Código fuente de la aplicación
+│   ├── main.py              # Punto de entrada del módulo
+│   ├── server.py            # Configuración de Flask (WSGI)
+│   ├── db/                  # Inicialización y lógica de base de datos
+│   ├── routes/              # Rutas y controladores (Blueprints)
+│   ├── templates/           # Vistas (Jinja2)
+│   └── static/              # Archivos estáticos (CSS/JS)
+├── Dockerfile               # Configuración del contenedor de producción
+├── requirements.txt         # Dependencias del proyecto (Remediadas)
+├── .gitignore               # Exclusiones de Git (db, venv, pycache)
+└── README.md                # Documentación del proyecto
+
+
 ```
 
 ---
 
 ## Technologies
 
-- Python 3 + Flask
+- Python 3.11 + Flask
+- Gunicorn (WSGI HTTP Server)
 - SQLite
+- Semgrep (SAST) y pip-audit (SCA)
 - Bootstrap 5.3
 - Jinja2 + Bootstrap Icons
+- Docker + Render.com
