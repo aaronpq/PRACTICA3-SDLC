@@ -1,0 +1,42 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  security-checks:
+    name: Análisis SAST and SCA
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias del proyecto
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Análisis SCA con pip-audit
+        run: |
+          pip install pip-audit
+          echo "Ejecutando análisis SCA con pip-audit..."
+          pip-audit -r requirements.txt
+
+      - name: Análisis SAST con Semgrep
+        run: |
+          pip install semgrep
+          echo "Ejecutando análisis SAST con Semgrep..."
+          semgrep scan --config auto --severity ERROR --error app/
+
+      - name: Resultado final
+        if: success()
+        run: echo "Pipeline finalizado exitosamente"
